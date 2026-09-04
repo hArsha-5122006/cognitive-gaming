@@ -1,5 +1,17 @@
 venv/
 .venv/
 *.db
-*.sqlite
+# Node
+node_modules/
+dist/
+
+# Vite
+.vite/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment
+.env*.sqlite
 *.sqlite3
