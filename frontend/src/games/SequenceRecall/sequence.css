@@ -1,0 +1,398 @@
+/* sequence.css */
+.sequence-game {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 30px 60px;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f0f6f4;
+  min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
+.sequence-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.sequence-badge {
+  display: inline-block;
+  background: #e0f0ea;
+  color: #1a6d5e;
+  padding: 6px 18px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+.live-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #2ecc71;
+  border-radius: 50%;
+  margin-right: 8px;
+  animation: pulse-dot 1.2s infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+.sequence-header h1 {
+  font-size: 42px;
+  margin: 6px 0 10px;
+  color: #1a2a2a;
+}
+.sequence-header h1 span {
+  background: linear-gradient(135deg, #2d7d6a, #1a5c4e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.sequence-header p {
+  color: #3d5a5a;
+  font-size: 18px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ===== LIVE STATS BAR ===== */
+.sequence-live-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px 30px;
+  background: white;
+  border-radius: 16px;
+  padding: 16px 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  border: 1px solid #e2eeea;
+}
+.live-stat-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.live-stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a5c4e;
+}
+.live-stat-label {
+  font-size: 14px;
+  color: #4d6a6a;
+  font-weight: 500;
+}
+
+/* ===== START SCREEN ===== */
+.sequence-start {
+  max-width: 500px;
+  margin: 30px auto;
+  background: white;
+  padding: 40px 35px;
+  border-radius: 24px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+  text-align: center;
+  border: 1px solid #e2eeea;
+}
+.sequence-start h2 {
+  color: #1a2a2a;
+  font-size: 26px;
+  margin-top: 0;
+}
+.instructions {
+  text-align: left;
+  background: #f5faf8;
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+.instructions p {
+  margin: 6px 0;
+  color: #1a3d3a;
+  font-size: 16px;
+}
+.instructions p::before {
+  content: "▸ ";
+  color: #2d7d6a;
+  font-weight: bold;
+}
+.difficulty-selector {
+  margin: 20px 0 30px;
+  text-align: left;
+}
+.difficulty-selector label {
+  display: block;
+  font-weight: 600;
+  color: #1a2a2a;
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+.difficulty-selector select {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  border-radius: 12px;
+  border: 2px solid #d0e0dc;
+  background: white;
+  font-weight: 500;
+  color: #1a2a2a;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.difficulty-selector select:focus {
+  border-color: #2d7d6a;
+  outline: none;
+}
+.primary-btn {
+  background: linear-gradient(135deg, #2d7d6a, #1a5c4e);
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  font-size: 20px;
+  font-weight: 600;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 4px 15px rgba(26, 92, 78, 0.3);
+}
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(26, 92, 78, 0.4);
+}
+.primary-btn:active {
+  transform: scale(0.97);
+}
+
+/* ===== GAME PLAY ===== */
+.sequence-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+.sequence-display {
+  background: white;
+  border-radius: 24px;
+  padding: 30px 20px 40px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+  border: 1px solid #e2eeea;
+}
+.sequence-display h2 {
+  color: #1a2a2a;
+  font-size: 26px;
+  margin-top: 0;
+}
+.sequence-display p {
+  color: #3d5a5a;
+  font-size: 16px;
+}
+.sequence-symbols {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 30px 0 20px;
+}
+.sequence-symbol {
+  font-size: 64px;
+  padding: 20px 20px 14px;
+  background: #f5faf8;
+  border-radius: 20px;
+  min-width: 80px;
+  border: 2px solid #e2eeea;
+}
+
+/* ===== RECALL SECTION ===== */
+.recall-section {
+  background: white;
+  border-radius: 24px;
+  padding: 30px 20px 40px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+  border: 1px solid #e2eeea;
+}
+.recall-section h2 {
+  color: #1a2a2a;
+  font-size: 26px;
+  margin-top: 0;
+}
+.recall-section p {
+  color: #3d5a5a;
+  margin-bottom: 20px;
+}
+.user-sequence {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  min-height: 80px;
+  align-items: center;
+  background: #f5faf8;
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 30px;
+  border: 2px dashed #c0d6d0;
+}
+.sequence-placeholder {
+  color: #8aa8a0;
+  font-size: 16px;
+  font-weight: 500;
+}
+.selected-symbol {
+  font-size: 42px;
+  padding: 10px 12px 6px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  border: 2px solid #2d7d6a;
+  animation: pop-in 0.15s ease;
+}
+@keyframes pop-in {
+  0% { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.symbol-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.symbol-button {
+  font-size: 44px;
+  padding: 16px 8px 10px;
+  background: #f5faf8;
+  border: 2px solid #d0e0dc;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, border-color 0.15s;
+  touch-action: manipulation;
+}
+.symbol-button:hover {
+  background: #e8f3ef;
+  border-color: #2d7d6a;
+  transform: scale(1.03);
+}
+.symbol-button:active {
+  transform: scale(0.92);
+}
+.symbol-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===== GAME OVER / RESULTS ===== */
+.sequence-result {
+  max-width: 550px;
+  margin: 20px auto;
+  background: white;
+  padding: 40px 35px;
+  border-radius: 24px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.07);
+  border: 1px solid #e2eeea;
+  text-align: center;
+}
+.sequence-result h2 {
+  font-size: 32px;
+  color: #1a2a2a;
+  margin-top: 0;
+}
+.stars-display {
+  font-size: 48px;
+  letter-spacing: 8px;
+  margin: 10px 0 20px;
+}
+.final-results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+  text-align: left;
+  background: #f5faf8;
+  padding: 20px 24px;
+  border-radius: 16px;
+  margin: 20px 0 30px;
+}
+.final-results div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.final-results span {
+  color: #3d5a5a;
+  font-weight: 500;
+}
+.final-results strong {
+  color: #1a2a2a;
+  font-size: 18px;
+}
+
+/* ===== RECENT WINNERS ===== */
+.recent-winners {
+  margin-top: 50px;
+  background: white;
+  border-radius: 24px;
+  padding: 20px 30px 30px;
+  border: 1px solid #e2eeea;
+}
+.recent-winners h2 {
+  font-size: 20px;
+  color: #1a2a2a;
+  margin-top: 0;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.winners-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.winner-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  background: #f5faf8;
+  border-radius: 14px;
+  transition: background 0.1s;
+}
+.winner-avatar {
+  width: 38px;
+  height: 38px;
+  background: #2d7d6a;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.winner-info {
+  flex: 1;
+  color: #1a2a2a;
+  font-size: 15px;
+}
+.winner-info strong {
+  color: #0d3d34;
+}
+.winner-time {
+  font-size: 13px;
+  color: #6a8a82;
+  font-weight: 500;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .sequence-game { padding: 10px 12px 40px; }
+  .sequence-header h1 { font-size: 30px; }
+  .sequence-live-stats { gap: 10px 16px; padding: 14px 18px; }
+  .live-stat-value { font-size: 18px; }
+  .symbol-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .symbol-button { font-size: 34px; padding: 12px 4px 8px; }
+  .sequence-symbol { font-size: 44px; padding: 14px 12px 8px; min-width: 60px; }
+  .final-results { grid-template-columns: 1fr; gap: 6px; }
+  .sequence-start { padding: 24px 18px; }
+  .sequence-result { padding: 24px 18px; }
+  .primary-btn { font-size: 17px; padding: 12px 28px; }
+}
