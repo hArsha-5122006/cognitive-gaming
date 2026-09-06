@@ -26,16 +26,13 @@ function Games() {
           color: 'var(--text-primary)',
           letterSpacing: '-0.5px',
           marginBottom: '8px',
-        }}>
-          Game Zone
-        </h1>
+          textShadow: '0 2px 12px rgba(62,39,35,0.06)',
+        }}>Game Zone</h1>
         <p style={{
           fontSize: '1.1rem',
           color: 'var(--text-secondary)',
           fontWeight: 400,
-        }}>
-          Choose a game and keep your mind active!
-        </p>
+        }}>Choose a game and keep your mind active.</p>
       </div>
 
       <div style={{
@@ -61,17 +58,17 @@ function Games() {
               justifyContent: 'center',
               minHeight: '180px',
               transform: 'translateY(0) perspective(800px) rotateX(0)',
-              transition: 'all 0.25s ease',
+              transition: 'all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.transform = 'translateY(-6px) scale(1.02) perspective(800px) rotateX(2deg)';
-              e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.08)';
+              e.currentTarget.style.transform = 'translateY(-8px) perspective(800px) rotateX(3deg) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 12px 40px rgba(62,39,35,0.08)';
               e.currentTarget.style.borderColor = 'var(--accent)';
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.transform = 'translateY(0) scale(1) perspective(800px) rotateX(0)';
-              e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)';
-              e.currentTarget.style.borderColor = 'rgba(0,0,0,0.04)';
+              e.currentTarget.style.transform = 'translateY(0) perspective(800px) rotateX(0) scale(1)';
+              e.currentTarget.style.boxShadow = '0 2px 12px rgba(62,39,35,0.04)';
+              e.currentTarget.style.borderColor = 'rgba(62,39,35,0.06)';
             }}
           >
             <div style={{ fontSize: '2.8rem', marginBottom: '8px' }}>{game.emoji}</div>
@@ -80,16 +77,12 @@ function Games() {
               fontWeight: 600,
               margin: '6px 0 4px',
               color: 'var(--text-primary)',
-            }}>
-              {game.name}
-            </h3>
+            }}>{game.name}</h3>
             <p style={{
               fontSize: '0.85rem',
               color: 'var(--text-secondary)',
               margin: 0,
-            }}>
-              {game.desc}
-            </p>
+            }}>{game.desc}</p>
           </Link>
         ))}
       </div>

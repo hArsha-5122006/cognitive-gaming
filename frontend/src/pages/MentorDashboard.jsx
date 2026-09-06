@@ -55,28 +55,28 @@ function MentorDashboard() {
     <div className="container" style={{ padding: '20px 0 40px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1 style={{ fontSize: '2rem', color: 'var(--text-primary)' }}>Mentor Dashboard</h1>
-        <button className="btn-secondary" onClick={() => setRefreshKey(prev => prev + 1)}>🔄 Refresh</button>
+        <button className="btn-secondary" onClick={() => setRefreshKey(prev => prev + 1)}>⟳</button>
       </div>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Manage your patients in real time. <span className="live-dot" /> live</p>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}><span className="live-dot" /> live</p>
 
-      <div className="glass-card" style={{ marginBottom: '24px', padding: '20px' }}>
-        <h3 style={{ marginBottom: '12px' }}>Add New Patient</h3>
+      <div className="card" style={{ marginBottom: '24px', padding: '20px' }}>
+        <h3 style={{ marginBottom: '12px' }}>Add Patient</h3>
         <form onSubmit={addPatient} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
           <input type="email" placeholder="Patient Email" value={newPatientEmail} onChange={(e) => setNewPatientEmail(e.target.value)} required style={{ flex: 2 }} />
-          <button type="submit" className="btn-gold" disabled={loading}>{loading ? 'Adding...' : 'Add Patient'}</button>
+          <button type="submit" className="btn-primary" disabled={loading}>{loading ? 'Adding...' : 'Add'}</button>
         </form>
-        {error && <div style={{ color: '#ff6b6b', marginTop: '8px' }}>{error}</div>}
+        {error && <div style={{ color: '#c62828', marginTop: '8px' }}>{error}</div>}
       </div>
 
       <h2 style={{ fontSize: '1.4rem', marginBottom: '16px' }}>Your Patients</h2>
       {patients.length === 0 ? (
-        <p style={{ color: 'var(--text-secondary)' }}>No patients added yet.</p>
+        <p style={{ color: 'var(--text-secondary)' }}>No patients yet.</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {patients.map(p => {
             const acts = getActivities(p.username) || [];
             return (
-              <div key={p.id} className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px' }}>
+              <div key={p.id} className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div><strong style={{ color: 'var(--text-primary)' }}>{p.name}</strong> ({p.email}) – {acts.length} activities</div>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button className="btn-secondary" onClick={() => viewPatientStats(p)}>View</button>
@@ -89,7 +89,7 @@ function MentorDashboard() {
       )}
 
       {selectedPatient && (
-        <div className="glass-card" style={{ marginTop: '24px', padding: '20px' }}>
+        <div className="card" style={{ marginTop: '24px', padding: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3>Activities for {selectedPatient.name}</h3>
             <button onClick={() => { setSelectedPatient(null); setPatientActivities([]); }} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: 'var(--text-secondary)' }}>✕</button>

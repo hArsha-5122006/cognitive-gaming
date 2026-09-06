@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getPerformanceSummary, getActivities } from '../utils/recommender';
+import toast, { Toaster } from 'react-hot-toast';
 
 function Dashboard() {
   const { user } = useAuth();
@@ -9,29 +10,51 @@ function Dashboard() {
 
   const loadData = () => {
     if (user) {
-      setActivities(getActivities(user.username));
+      const acts = getActivities(user.username);
+      setActivities(acts);
       setSummary(getPerformanceSummary(user.username));
     }
   };
 
   useEffect(() => {
     loadData();
-    const handleSave = () => loadData();
+    const handleSave = () => {
+      loadData();
+      toast.success('Updated', { icon: '✨' });
+    };
     window.addEventListener('gameResultSaved', handleSave);
-    return () => window.removeEventListener('gameResultSaved', handleSave);
+    const interval = setInterval(() => {
+      loadData();
+      toast('Refreshed', { icon: '🔄' });
+    }, 15000);
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        loadData();
+        toast('Refreshed', { icon: '🔄' });
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      window.removeEventListener('gameResultSaved', handleSave);
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [user]);
 
-  if (!user) return <div className="container" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>Please log in.</div>;
+  if (!user) return <div className="container" style={{ padding: '40px', textAlign: 'center' }}>Please log in.</div>;
 
   const totalGames = summary?.totalGames || 0;
   const skillAverages = summary?.skillAverages || {};
 
   return (
     <div className="container" style={{ padding: '20px 0 40px' }}>
+      <Toaster position="top-right" toastOptions={{ className: 'toast-success' }} />
       <h1 style={{ fontSize: '2rem', marginBottom: '4px', color: 'var(--text-primary)' }}>
-        Good Morning, {user.username}!
+        Good Morning, {user.username}
       </h1>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Keep playing, keep your mind active.</p>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>
+        <span className="live-dot" /> live
+      </p>
 
       <div style={{
         display: 'grid',
@@ -64,9 +87,7 @@ function Dashboard() {
                 <span style={{ fontWeight: 500 }}>{skill}</span>
                 <span>{avg}</span>
               </div>
-              <div className="skill-bar">
-                <div className="fill" style={{ width: `${Math.min(avg, 100)}%` }} />
-              </div>
+              <div className="skill-bar"><div className="fill" style={{ width: `${Math.min(avg, 100)}%` }} /></div>
             </div>
           ))
         )}

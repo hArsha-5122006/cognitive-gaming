@@ -7,8 +7,7 @@ function Navbar() {
   const { status } = useVoice();
 
   return (
-    <nav style={{
-      background: 'var(--primary)',
+    <nav className="glass" style={{
       padding: '0 32px',
       height: '72px',
       display: 'flex',
@@ -17,17 +16,21 @@ function Navbar() {
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+      borderBottom: '1px solid rgba(255,255,255,0.2)',
+      boxShadow: '0 4px 24px rgba(62,39,35,0.06)',
+      marginBottom: '0',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <span style={{
           fontSize: '1.6rem',
           fontWeight: 700,
-          color: 'white',
+          color: 'var(--primary)',
           letterSpacing: '-0.5px',
+          textShadow: '0 2px 8px rgba(62,39,35,0.06)',
         }}>
-          <span style={{ color: 'var(--accent)' }}>Mind</span>Play
+          Mind<span style={{ color: 'var(--accent)' }}>Play</span>
         </span>
+        <span className="live-badge">● LIVE</span>
       </div>
 
       <div style={{
@@ -35,15 +38,15 @@ function Navbar() {
         gap: '28px',
         fontSize: '0.95rem',
         fontWeight: 500,
-        color: 'rgba(255,255,255,0.85)',
+        color: 'var(--text-secondary)',
         alignItems: 'center',
       }}>
-        <Link to="/home" style={{ color: 'rgba(255,255,255,0.85)', textDecoration: 'none', transition: '0.15s', padding: '4px 0', borderBottom: '2px solid transparent' }} onMouseEnter={e => { e.currentTarget.style.color = 'white'; e.currentTarget.style.borderBottomColor = 'var(--accent)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.85)'; e.currentTarget.style.borderBottomColor = 'transparent'; }}>Home</Link>
-        <Link to="/games" style={{ color: 'rgba(255,255,255,0.85)', textDecoration: 'none', transition: '0.15s', padding: '4px 0', borderBottom: '2px solid transparent', fontWeight: 600 }} onMouseEnter={e => { e.currentTarget.style.color = 'white'; e.currentTarget.style.borderBottomColor = 'var(--accent)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.85)'; e.currentTarget.style.borderBottomColor = 'transparent'; }}>Games</Link>
+        <Link to="/home" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: '0.15s', padding: '4px 0', borderBottom: '2px solid transparent' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.borderBottomColor = 'var(--accent)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.borderBottomColor = 'transparent'; }}>Home</Link>
+        <Link to="/games" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: '0.15s', padding: '4px 0', borderBottom: '2px solid transparent', fontWeight: 600 }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.borderBottomColor = 'var(--accent)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.borderBottomColor = 'transparent'; }}>Games</Link>
         {user?.role === 'mentor' ? (
-          <Link to="/mentor-dashboard" style={{ color: 'rgba(255,255,255,0.85)', textDecoration: 'none', transition: '0.15s', padding: '4px 0', borderBottom: '2px solid transparent' }} onMouseEnter={e => { e.currentTarget.style.color = 'white'; e.currentTarget.style.borderBottomColor = 'var(--accent)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.85)'; e.currentTarget.style.borderBottomColor = 'transparent'; }}>Mentor</Link>
+          <Link to="/mentor-dashboard" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: '0.15s', padding: '4px 0', borderBottom: '2px solid transparent' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.borderBottomColor = 'var(--accent)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.borderBottomColor = 'transparent'; }}>Mentor</Link>
         ) : (
-          <Link to="/dashboard" style={{ color: 'rgba(255,255,255,0.85)', textDecoration: 'none', transition: '0.15s', padding: '4px 0', borderBottom: '2px solid transparent' }} onMouseEnter={e => { e.currentTarget.style.color = 'white'; e.currentTarget.style.borderBottomColor = 'var(--accent)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.85)'; e.currentTarget.style.borderBottomColor = 'transparent'; }}>Dashboard</Link>
+          <Link to="/dashboard" style={{ color: 'var(--text-secondary)', textDecoration: 'none', transition: '0.15s', padding: '4px 0', borderBottom: '2px solid transparent' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.borderBottomColor = 'var(--accent)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.borderBottomColor = 'transparent'; }}>Dashboard</Link>
         )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -52,22 +55,22 @@ function Navbar() {
             width: '10px',
             height: '10px',
             borderRadius: '50%',
-            background: status === 'listening' ? '#2ecc71' : (status === 'speaking' ? '#f39c12' : '#888'),
-            boxShadow: status === 'listening' ? '0 0 8px rgba(46,204,113,0.5)' : 'none',
+            background: status === 'listening' ? '#2e7d32' : (status === 'speaking' ? '#f9a825' : '#ccc'),
+            boxShadow: status === 'listening' ? '0 0 8px rgba(46,125,50,0.3)' : 'none',
             transition: '0.2s',
           }} />
-          <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)' }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             {status === 'listening' ? 'Listening' : status === 'speaking' ? 'Speaking' : 'Idle'}
           </span>
         </div>
 
         {user ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <span style={{ color: 'white', fontWeight: 600 }}>👋 {user.username}</span>
-            <button onClick={logout} className="btn-secondary" style={{ padding: '4px 16px', fontSize: '0.85rem', borderColor: 'white', color: 'white' }} onMouseEnter={e => { e.currentTarget.style.background = 'white'; e.currentTarget.style.color = 'var(--primary)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'white'; }}>Logout</button>
+            <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{user.username}</span>
+            <button onClick={logout} className="btn-secondary" style={{ padding: '4px 16px', fontSize: '0.85rem' }}>Logout</button>
           </div>
         ) : (
-          <Link to="/login" className="btn-secondary" style={{ padding: '6px 20px', fontSize: '0.85rem', borderColor: 'white', color: 'white' }} onMouseEnter={e => { e.currentTarget.style.background = 'white'; e.currentTarget.style.color = 'var(--primary)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'white'; }}>Log In</Link>
+          <Link to="/login" className="btn-secondary" style={{ padding: '6px 20px', fontSize: '0.85rem' }}>Log In</Link>
         )}
       </div>
     </nav>

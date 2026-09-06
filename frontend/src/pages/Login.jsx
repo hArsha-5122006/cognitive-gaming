@@ -26,10 +26,10 @@ function Login() {
 
   return (
     <div className="container" style={{ maxWidth: '440px', paddingTop: '80px' }}>
-      <div className="card" style={{ padding: '40px 32px' }}>
+      <div className="card" style={{ padding: '40px 32px', background: 'var(--card-bg)' }}>
         <h2 style={{ textAlign: 'center', marginBottom: '8px', color: 'var(--text-primary)' }}>Welcome Back</h2>
         <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '24px' }}>Log in to your account</p>
-        {error && <div style={{ color: 'var(--error)', background: '#fde8e8', padding: '8px 16px', borderRadius: '8px', marginBottom: '16px' }}>{error}</div>}
+        {error && <div style={{ color: '#c62828', background: '#fce4e4', padding: '8px 16px', borderRadius: '8px', marginBottom: '16px' }}>{error}</div>}
         <form onSubmit={handleSubmit} noValidate>
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', marginBottom: '6px', fontWeight: 500 }}>Email</label>
