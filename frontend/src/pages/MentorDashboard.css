@@ -1,0 +1,145 @@
+.mentor-dashboard {
+  padding: 20px 0 40px;
+}
+
+.mentor-dashboard h1 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.mentor-dashboard .subtitle {
+  color: #4a5f5a;
+  margin-bottom: 24px;
+}
+
+.mentor-dashboard .add-patient-form {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.mentor-dashboard .add-patient-form h3 {
+  margin-bottom: 12px;
+}
+
+.mentor-dashboard .add-patient-form form {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.mentor-dashboard .add-patient-form input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #d0dcd8;
+  min-width: 160px;
+}
+
+.mentor-dashboard .patient-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mentor-dashboard .patient-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid #eef2f0;
+}
+
+.mentor-dashboard .patient-card .patient-info strong {
+  color: #1a2a2a;
+}
+
+.mentor-dashboard .patient-card .patient-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.mentor-dashboard .patient-stats-modal {
+  margin-top: 24px;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid #eef2f0;
+}
+
+.mentor-dashboard .patient-stats-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mentor-dashboard .patient-stats-modal .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.mentor-dashboard .patient-stats-modal .stat-card {
+  text-align: center;
+  padding: 12px;
+  background: #f5faf8;
+  border-radius: 12px;
+}
+
+.mentor-dashboard .patient-stats-modal .stat-number {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.mentor-dashboard .patient-stats-modal .stat-label {
+  font-size: 0.8rem;
+  color: #4a5f5a;
+}
+
+.mentor-dashboard .skill-bar {
+  height: 6px;
+  background: #eef2f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.mentor-dashboard .skill-bar .fill {
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, var(--primary-light), var(--primary));
+}
+
+.mentor-dashboard .activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.mentor-dashboard .activity-table thead {
+  background: #eaf5f1;
+}
+
+.mentor-dashboard .activity-table th {
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.mentor-dashboard .activity-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eef2f0;
+}
+
+.mentor-dashboard .empty-message {
+  color: #4a5f5a;
+}

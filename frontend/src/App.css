@@ -1,0 +1,26 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-dark);
+}
+.app-main {
+  flex: 1;
+  padding: 24px 0 48px;
+}
+.game-container {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius);
+  padding: 24px 20px;
+  box-shadow: var(--glass-shadow);
+  max-width: 780px;
+  margin: 0 auto;
+  transition: var(--transition);
+}
+.game-container:hover {
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+  border-color: rgba(0,229,255,0.1);
+}
