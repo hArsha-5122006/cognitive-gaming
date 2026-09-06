@@ -1,3 +1,4 @@
+import { saveGameResult } from "../../utils/api";
 import { useState, useEffect } from "react";
 import {
   generateSequence,
@@ -97,13 +98,14 @@ function SequenceRecall() {
       }
 
       setGameOver(true);
+          // TODO: Insert saveGameResult here with actual variables
     }
   };
 
   const accuracy = calculateAccuracy(correctPositions, sequence.length);
 
   return (
-    <div className="sequence-game">
+    <div className="game-container sequence-game">
       <section className="sequence-header">
         <div className="sequence-badge">
           <span className="live-dot"></span>
@@ -167,7 +169,7 @@ function SequenceRecall() {
             </select>
           </div>
 
-          <button className="primary-btn" onClick={startGame}>
+          <button className="btn-primary" onClick={startGame}>
             Start Game 🎮
           </button>
         </div>
@@ -258,7 +260,7 @@ function SequenceRecall() {
             </div>
           </div>
 
-          <button className="primary-btn" onClick={startGame}>
+          <button className="btn-primary" onClick={startGame}>
             Play Again 🔄
           </button>
         </div>

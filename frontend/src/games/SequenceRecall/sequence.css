@@ -144,7 +144,7 @@
   border-color: #2d7d6a;
   outline: none;
 }
-.primary-btn {
+.btn-primary {
   background: linear-gradient(135deg, #2d7d6a, #1a5c4e);
   color: white;
   border: none;
@@ -156,11 +156,11 @@
   transition: transform 0.1s, box-shadow 0.2s;
   box-shadow: 0 4px 15px rgba(26, 92, 78, 0.3);
 }
-.primary-btn:hover {
+.btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(26, 92, 78, 0.4);
 }
-.primary-btn:active {
+.btn-primary:active {
   transform: scale(0.97);
 }
 
@@ -394,5 +394,5 @@
   .final-results { grid-template-columns: 1fr; gap: 6px; }
   .sequence-start { padding: 24px 18px; }
   .sequence-result { padding: 24px 18px; }
-  .primary-btn { font-size: 17px; padding: 12px 28px; }
+  .btn-primary { font-size: 17px; padding: 12px 28px; }
 }

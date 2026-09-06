@@ -1,7 +1,16 @@
 function Footer() {
   return (
-    <footer style={{ background: "#f0f6f4", padding: "20px 30px", textAlign: "center", color: "#1a2a2a", borderTop: "1px solid #d0e0dc" }}>
-      <p>© 2026 Cognitive Gaming. All rights reserved.</p>
+    <footer style={{
+      background: 'rgba(255,255,255,0.5)',
+      backdropFilter: 'blur(8px)',
+      WebkitBackdropFilter: 'blur(8px)',
+      borderTop: '1px solid rgba(255,255,255,0.3)',
+      padding: '20px 32px',
+      textAlign: 'center',
+      color: '#7a928a',
+      fontSize: '0.85rem',
+    }}>
+      <p style={{ margin: 0 }}>© 2024 MindPlay. All rights reserved.</p>
     </footer>
   );
 }

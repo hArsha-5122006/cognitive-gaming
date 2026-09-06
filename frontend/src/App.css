@@ -1,123 +1,75 @@
-/* =========================================================
-   FOOTER – REALTIME ENHANCED
-   ========================================================= */
-
-.footer {
-  background: #0c2d1e;
-  color: #ffffff;
-  padding: 40px 0 20px;
-  margin-top: auto;
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
 }
 
-.footer-container {
-  width: min(1180px, 92%);
+.app-main {
+  flex: 1;
+  padding: 16px 0 32px;
+}
+
+/* Compact game container – smaller, scrollable if needed */
+.game-container {
+  background: rgba(255,255,255,0.7) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255,255,255,0.3) !important;
+  border-radius: 20px !important;
+  padding: 16px 14px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.04) !important;
+  max-width: 520px !important;
   margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 30px;
-  flex-wrap: wrap;
+  max-height: 75vh !important;
+  overflow-y: auto !important;
+  transition: all 0.25s ease;
+  transform: translateY(0);
 }
 
-.footer-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.game-container:hover {
+  transform: translateY(-2px) scale(1.002);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+  border-color: #3a9d7c !important;
 }
 
-.footer-icon {
-  font-size: 2rem;
+/* Custom scrollbar */
+.game-container::-webkit-scrollbar {
+  width: 4px;
+}
+.game-container::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.02);
+}
+.game-container::-webkit-scrollbar-thumb {
+  background: var(--primary-light);
+  border-radius: 4px;
 }
 
-.footer-brand h3 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 4px;
-  color: #ffffff;
+/* Compact headings */
+.game-container h1 {
+  font-size: 1.6rem !important;
+  margin-bottom: 6px !important;
 }
-
-.footer-brand p {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin: 0;
+.game-container h2 {
+  font-size: 1.2rem !important;
+  margin-bottom: 4px !important;
 }
-
-.footer-links {
-  display: flex;
-  gap: 20px;
+.game-container h3 {
+  font-size: 1rem !important;
+  margin-bottom: 4px !important;
 }
-
-.footer-links a {
-  color: rgba(255, 255, 255, 0.8);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: color 0.2s ease;
+.game-container p {
+  font-size: 0.85rem !important;
+  margin-bottom: 6px !important;
 }
-
-.footer-links a:hover {
-  color: #4ade80;
+.game-container button {
+  font-size: 0.9rem !important;
+  padding: 8px 20px !important;
 }
-
-.footer-live {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+.game-container label {
+  font-size: 0.85rem !important;
 }
-
-.live-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #4ade80;
-  animation: footerLiveDot 1.8s infinite;
-}
-
-@keyframes footerLiveDot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.5); opacity: 0.5; }
-}
-
-.footer-bottom {
-  width: min(1180px, 92%);
-  margin: 30px auto 0;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.footer-bottom p {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
-  margin: 0;
-}
-
-.footer-tagline {
-  letter-spacing: 0.5px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .footer-container {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .footer-bottom {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .live-dot {
-    animation: none;
-  }
+.game-container select {
+  font-size: 0.85rem !important;
+  padding: 6px 10px !important;
 }

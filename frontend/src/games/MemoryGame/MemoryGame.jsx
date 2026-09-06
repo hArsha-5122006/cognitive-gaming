@@ -1,336 +1,269 @@
-import { useEffect, useState } from "react";
-
-import MemoryCard from "./MemoryCard";
-
+import { saveGameResult } from "../../utils/api";
+import { useState, useEffect } from "react";
 import {
-  generateCards,
-  checkMatch,
+  getDifficultySettings,
+  generateCardDeck,
+  calculateAccuracy,
+  calculateStars,
   calculateScore,
-  calculateAccuracy
 } from "./memoryLogic";
-
 import "./memory.css";
 
-
 function MemoryGame() {
-
-  const [cards, setCards] = useState([]);
-
-  const [flippedCards, setFlippedCards] = useState([]);
-
-  const [matchedCards, setMatchedCards] = useState([]);
-
-  const [matches, setMatches] = useState(0);
-
-  const [mistakes, setMistakes] = useState(0);
-
-  const [score, setScore] = useState(0);
-
-  const [time, setTime] = useState(0);
-
+  const [difficulty, setDifficulty] = useState(1);
+  const [deck, setDeck] = useState([]);
   const [gameStarted, setGameStarted] = useState(false);
-
   const [gameOver, setGameOver] = useState(false);
+  const [score, setScore] = useState(0);
+  const [matches, setMatches] = useState(0);
+  const [attempts, setAttempts] = useState(0);
+  const [stars, setStars] = useState(0);
+  const [responseTime, setResponseTime] = useState(0);
+  const [startTime, setStartTime] = useState(null);
+  const [flippedIndices, setFlippedIndices] = useState([]);
+  const [matchedPairs, setMatchedPairs] = useState(0);
+  const [totalPairs, setTotalPairs] = useState(0);
+  const [activePlayers, setActivePlayers] = useState(42);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-
-  // Start a new game
-  const startGame = () => {
-
-    setCards(generateCards());
-
-    setFlippedCards([]);
-
-    setMatchedCards([]);
-
-    setMatches(0);
-
-    setMistakes(0);
-
-    setScore(0);
-
-    setTime(0);
-
-    setGameStarted(true);
-
-    setGameOver(false);
-  };
-
-
-  // Timer
+  // Live players simulation
   useEffect(() => {
-
-    if (!gameStarted || gameOver) {
-      return;
-    }
-
-    const timer = setInterval(() => {
-
-      setTime((previousTime) => previousTime + 1);
-
-    }, 1000);
-
-    return () => clearInterval(timer);
-
-  }, [gameStarted, gameOver]);
-
-
-  // Handle card click
-  const handleCardClick = (card) => {
-
-    // Don't allow more than two cards
-    if (flippedCards.length === 2) {
-      return;
-    }
-
-    // Don't allow clicking the same card
-    if (flippedCards.includes(card.id)) {
-      return;
-    }
-
-    // Don't allow clicking an already matched card
-    if (matchedCards.includes(card.id)) {
-      return;
-    }
-
-    const newFlippedCards = [
-      ...flippedCards,
-      card.id
-    ];
-
-    setFlippedCards(newFlippedCards);
-
-
-    // First card
-    if (newFlippedCards.length === 1) {
-      return;
-    }
-
-
-    // Second card
-    const firstCard = cards.find(
-      (item) => item.id === newFlippedCards[0]
-    );
-
-    const secondCard = card;
-
-
-    // Check whether cards match
-    if (checkMatch(firstCard, secondCard)) {
-
-      const newMatchedCards = [
-        ...matchedCards,
-        firstCard.id,
-        secondCard.id
-      ];
-
-      const newMatches = matches + 1;
-
-      setMatchedCards(newMatchedCards);
-
-      setMatches(newMatches);
-
-      setScore(
-        calculateScore(
-          newMatches,
-          mistakes
-        )
+    const interval = setInterval(() => {
+      setActivePlayers((prev) =>
+        Math.max(25, prev + Math.floor(Math.random() * 5) - 2)
       );
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
-      setFlippedCards([]);
+  const startGame = () => {
+    const { pairs, cols, rows, multiplier } = getDifficultySettings(difficulty);
+    const newDeck = generateCardDeck(pairs);
+    setDeck(newDeck);
+    setGameStarted(true);
+    setGameOver(false);
+    setScore(0);
+    setMatches(0);
+    setAttempts(0);
+    setStars(0);
+    setResponseTime(0);
+    setFlippedIndices([]);
+    setMatchedPairs(0);
+    setTotalPairs(pairs);
+    setStartTime(Date.now());
+    setIsProcessing(false);
+    // Reset matched flag
+    setDeck(newDeck.map(card => ({ ...card, matched: false })));
+  };
 
+  const handleCardClick = (index) => {
+    if (isProcessing) return;
+    if (gameOver) return;
+    if (flippedIndices.length === 2) return;
+    if (deck[index].matched) return;
+    if (flippedIndices.includes(index)) return;
 
-      // Check game completion
-      if (newMatchedCards.length === cards.length) {
+    // Flip the card
+    setFlippedIndices([...flippedIndices, index]);
 
-        setGameOver(true);
+    // If two cards are flipped, check for match
+    if (flippedIndices.length === 1) {
+      const firstIndex = flippedIndices[0];
+      const secondIndex = index;
+      const firstCard = deck[firstIndex];
+      const secondCard = deck[secondIndex];
 
+      setAttempts(prev => prev + 1);
+
+      if (firstCard.emoji === secondCard.emoji) {
+        // Match found
+        setMatches(prev => prev + 1);
+        setMatchedPairs(prev => prev + 1);
+        setDeck(prevDeck =>
+          prevDeck.map((card, i) =>
+            i === firstIndex || i === secondIndex
+              ? { ...card, matched: true }
+              : card
+          )
+        );
+        setFlippedIndices([]);
+
+        // Check if all pairs matched
+        if (matchedPairs + 1 === totalPairs) {
+          endGame();
+        }
+      } else {
+        // No match - flip back after delay
+        setIsProcessing(true);
+        setTimeout(() => {
+          setFlippedIndices([]);
+          setIsProcessing(false);
+        }, 800);
       }
-
-    } else {
-
-      // Incorrect match
-      const newMistakes = mistakes + 1;
-
-      setMistakes(newMistakes);
-
-      setScore(
-        calculateScore(
-          matches,
-          newMistakes
-        )
-      );
-
-
-      // Hide cards after a short delay
-      setTimeout(() => {
-
-        setFlippedCards([]);
-
-      }, 800);
-
     }
   };
 
+  const endGame = () => {
+    const endTime = Date.now();
+    const timeTaken = startTime ? (endTime - startTime) : 0;
+    setResponseTime(timeTaken);
+    setGameOver(true);
+          // TODO: Insert saveGameResult here with actual variables
 
-  const accuracy = calculateAccuracy(
-    matches,
-    mistakes
-  );
+    const accuracy = calculateAccuracy(matches, attempts);
+    const { multiplier } = getDifficultySettings(difficulty);
+    const finalScore = calculateScore(matches, attempts, timeTaken, multiplier);
+    setScore(finalScore);
+    setStars(calculateStars(accuracy, timeTaken, totalPairs));
+  };
 
+  const accuracy = calculateAccuracy(matches, attempts);
+  const { cols, rows } = getDifficultySettings(difficulty);
 
   return (
-    <div className="memory-game">
-
-      <div className="memory-header">
-
-        <h1>🃏 Memory Match</h1>
-
-        <p>
-          Find all matching pairs and test your visual memory.
-        </p>
-
-      </div>
-
-
-      {!gameStarted && (
-
-        <div className="start-screen">
-
-          <div className="game-instructions">
-
-            <h2>How to Play</h2>
-
-            <p>
-              Find all 6 matching pairs.
-            </p>
-
-            <p>
-              Try to remember the position of each card.
-            </p>
-
-            <p>
-              Complete the game with as few mistakes as possible.
-            </p>
-
-          </div>
-
-          <button
-            className="primary-btn"
-            onClick={startGame}
-          >
-            Start Game 🎮
-          </button>
-
+    <div className="game-container memory-game">
+      {/* ===== HEADER ===== */}
+      <section className="memory-header">
+        <div className="memory-badge">
+          <span className="live-dot"></span>
+          Live Memory Training
         </div>
+        <h1>
+          Memory <span>Match</span>
+        </h1>
+        <p>
+          Find matching pairs of symbols. Test your memory and concentration.
+        </p>
+      </section>
 
+      {/* ===== LIVE STATS BAR ===== */}
+      {gameStarted && !gameOver && (
+        <div className="memory-live-stats">
+          <div className="live-stat-item">
+            <div className="live-stat-value">{activePlayers}</div>
+            <div className="live-stat-label">Playing Now</div>
+          </div>
+          <div className="live-stat-item">
+            <div className="live-stat-value">{difficulty}</div>
+            <div className="live-stat-label">Difficulty</div>
+          </div>
+          <div className="live-stat-item">
+            <div className="live-stat-value">{matches}/{totalPairs}</div>
+            <div className="live-stat-label">Pairs Found</div>
+          </div>
+          <div className="live-stat-item">
+            <div className="live-stat-value">{attempts}</div>
+            <div className="live-stat-label">Attempts</div>
+          </div>
+          <div className="live-stat-item">
+            <div className="live-stat-value">{Math.round(accuracy)}%</div>
+            <div className="live-stat-label">Accuracy</div>
+          </div>
+        </div>
       )}
 
+      {/* ===== START SCREEN ===== */}
+      {!gameStarted && !gameOver && (
+        <div className="memory-start">
+          <h2>How to Play</h2>
+          <div className="instructions">
+            <p>Flip two cards to find matching pairs.</p>
+            <p>Remember the positions of symbols.</p>
+            <p>Match all pairs with the fewest attempts.</p>
+          </div>
 
-      {gameStarted && (
+          <div className="difficulty-selector">
+            <label htmlFor="difficulty-select">Difficulty</label>
+            <select
+              id="difficulty-select"
+              value={difficulty}
+              onChange={(e) => setDifficulty(Number(e.target.value))}
+            >
+              <option value={1}>Level 1 — Easy (4 pairs)</option>
+              <option value={2}>Level 2 — Medium (6 pairs)</option>
+              <option value={3}>Level 3 — Hard (8 pairs)</option>
+              <option value={4}>Level 4 — Very Hard (12 pairs)</option>
+              <option value={5}>Level 5 — Expert (18 pairs)</option>
+            </select>
+          </div>
 
-        <>
+          <button className="btn-primary" onClick={startGame}>
+            Start Game 🃏
+          </button>
+        </div>
+      )}
 
-          <div className="memory-stats">
+      {/* ===== GAME PLAY ===== */}
+      {gameStarted && !gameOver && (
+        <div className="memory-grid-container">
+          <h2>Find Pairs</h2>
+          <p>{totalPairs} pairs to match</p>
 
-            <div className="memory-stat">
-              <span>⏱️ Time</span>
-              <strong>{time}s</strong>
-            </div>
+          <div
+            className="memory-grid"
+            style={{
+              gridTemplateColumns: `repeat(${cols}, 1fr)`,
+              maxWidth: `${Math.min(600, cols * 80)}px`
+            }}
+          >
+            {deck.map((card, index) => (
+              <div
+                key={card.cardIndex}
+                className={`memory-card ${card.matched ? 'matched' : ''} ${flippedIndices.includes(index) ? 'flipped' : ''}`}
+                onClick={() => handleCardClick(index)}
+                style={{
+                  background: card.matched ? '#f0fff4' : (flippedIndices.includes(index) ? 'white' : '#e8f3ef'),
+                  borderColor: card.matched ? '#2ecc71' : (flippedIndices.includes(index) ? '#2d7d6a' : '#d0e0dc'),
+                  cursor: card.matched ? 'default' : 'pointer'
+                }}
+                disabled={card.matched || flippedIndices.includes(index) || isProcessing}
+              >
+                {(flippedIndices.includes(index) || card.matched) ? card.emoji : '❓'}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
-            <div className="memory-stat">
-              <span>🎯 Matches</span>
-              <strong>{matches}</strong>
-            </div>
+      {/* ===== GAME OVER ===== */}
+      {gameOver && (
+        <div className="memory-result">
+          <h2>{accuracy >= 100 ? "🎉 Perfect!" : accuracy >= 70 ? "👏 Great Job!" : "💪 Keep Practicing!"}</h2>
+          <div className="stars-display">
+            {"⭐".repeat(stars)}
+            {"☆".repeat(3 - stars)}
+          </div>
 
-            <div className="memory-stat">
-              <span>❌ Mistakes</span>
-              <strong>{mistakes}</strong>
-            </div>
-
-            <div className="memory-stat">
-              <span>⭐ Score</span>
-              <strong>{score}</strong>
-            </div>
-
-            <div className="memory-stat">
-              <span>📊 Accuracy</span>
+          <div className="final-results">
+            <div>
+              <span>Accuracy</span>
               <strong>{accuracy}%</strong>
             </div>
-
-          </div>
-
-
-          <div className="memory-board">
-
-            {cards.map((card) => (
-
-              <MemoryCard
-                key={card.id}
-                card={card}
-                isFlipped={
-                  flippedCards.includes(card.id)
-                }
-                isMatched={
-                  matchedCards.includes(card.id)
-                }
-                onClick={() =>
-                  handleCardClick(card)
-                }
-              />
-
-            ))}
-
-          </div>
-
-
-          {gameOver && (
-
-            <div className="game-over">
-
-              <h2>🎉 Congratulations!</h2>
-
-              <p>
-                You found all the matching pairs.
-              </p>
-
-              <div className="final-results">
-
-                <p>
-                  <strong>Score:</strong> {score}
-                </p>
-
-                <p>
-                  <strong>Accuracy:</strong> {accuracy}%
-                </p>
-
-                <p>
-                  <strong>Mistakes:</strong> {mistakes}
-                </p>
-
-                <p>
-                  <strong>Completion Time:</strong> {time}s
-                </p>
-
-              </div>
-
-              <button
-                className="primary-btn"
-                onClick={startGame}
-              >
-                Play Again 🔄
-              </button>
-
+            <div>
+              <span>Pairs Matched</span>
+              <strong>{matches}/{totalPairs}</strong>
             </div>
+            <div>
+              <span>Attempts</span>
+              <strong>{attempts}</strong>
+            </div>
+            <div>
+              <span>Score</span>
+              <strong>{score}</strong>
+            </div>
+            <div>
+              <span>Response Time</span>
+              <strong>{(responseTime / 1000).toFixed(1)}s</strong>
+            </div>
+          </div>
 
-          )}
-
-        </>
-
+          <button className="btn-primary" onClick={startGame}>
+            Play Again 🔄
+          </button>
+        </div>
       )}
-
     </div>
   );
 }
-
 
 export default MemoryGame;
