@@ -1,4 +1,4 @@
-import { saveGameResult } from "../../utils/api";
+import { saveActivity } from "../../utils/recommender";
 import { useState, useEffect } from "react";
 import { getDifficultySettings, generateSequence, calculateAccuracy, calculateStars, calculateScore } from "./digitSpanLogic";
 import "./digitSpan.css";
@@ -111,6 +111,23 @@ function DigitSpan() {
     setScore(finalScore);
     setStars(calculateStars(accuracy, avgLen));
     setGameOver(true);
+      const username = localStorage.getItem("username");
+      if (username) {
+        saveActivity(username, "Digit Span", score || 0, accuracy || 0, stars || 0, difficulty || 1, responseTime || 0);
+      }if (username) {
+      }
+      if (username) {
+      }
+      if (username) {
+      }
+      if (username) {
+      }
+      if (username) {
+      }
+      const userStr = localStorage.getItem("user");
+      if (userStr) {
+        const user = JSON.parse(userStr);
+      }
           // TODO: Insert saveGameResult here with actual variables
     setGameStarted(false);
   };

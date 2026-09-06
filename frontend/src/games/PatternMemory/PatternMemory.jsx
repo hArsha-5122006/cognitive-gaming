@@ -1,4 +1,4 @@
-import { saveGameResult } from "../../utils/api";
+import { saveActivity } from "../../utils/recommender";
 import { useState, useEffect } from "react";
 import { getDifficultySettings, generateSequence, calculateAccuracy, calculateStars, calculateScore } from "./patternMemoryLogic";
 import "./patternMemory.css";
@@ -121,6 +121,23 @@ function PatternMemory() {
     setScore(finalScore);
     setStars(calculateStars(accuracy, maxLevel));
     setGameOver(true);
+      const username = localStorage.getItem("username");
+      if (username) {
+        saveActivity(username, "Pattern Memory", score || 0, accuracy || 0, stars || 0, difficulty || 1, responseTime || 0);
+      }if (username) {
+      }
+      if (username) {
+      }
+      if (username) {
+      }
+      if (username) {
+      }
+      if (username) {
+      }
+      const userStr = localStorage.getItem("user");
+      if (userStr) {
+        const user = JSON.parse(userStr);
+      }
           // TODO: Insert saveGameResult here with actual variables
     setGameStarted(false);
   };

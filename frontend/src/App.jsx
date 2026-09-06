@@ -2,16 +2,16 @@ import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { VoiceProvider, useVoice } from "./context/VoiceAssistantContext";
-import ProtectedRoute from "./components/ProtectedRoute";
+import PrivateRoute from "./components/PrivateRoute";
 
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 
-import Home from "./pages/Home";
-import Games from "./pages/Games";
-import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+import Games from "./pages/Games";
+import MentorDashboard from "./pages/MentorDashboard";
 
 import MemoryGame from "./games/MemoryGame/MemoryGame";
 import SequenceRecall from "./games/SequenceRecall/SequenceRecall";
@@ -56,7 +56,7 @@ class ErrorBoundary extends React.Component {
 }
 
 function AppContent() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { setCommandHandler, speak } = useVoice();
@@ -103,13 +103,17 @@ function AppContent() {
           response = 'You are not on a game page. Please go to a game first.';
         }
       } else if (cmd.includes('home')) {
-        navigate('/');
+        navigate('/home');
         response = 'Navigating to home.';
       } else if (cmd.includes('games')) {
         navigate('/games');
         response = 'Navigating to games.';
       } else if (cmd.includes('dashboard')) {
-        navigate('/dashboard');
+        if (user?.role === 'mentor') {
+          navigate('/mentor-dashboard');
+        } else {
+          navigate('/dashboard');
+        }
         response = 'Navigating to dashboard.';
       } else if (cmd.includes('help')) {
         response = 'You can say: "explain how to play", "go to home", "go to games", "go to dashboard", "open [game name]", or "help".';
@@ -118,97 +122,39 @@ function AppContent() {
       }
       speak(response);
     });
-  }, [navigate, location, speak, setCommandHandler]);
+  }, [navigate, location, speak, setCommandHandler, user]);
 
   return (
     <>
       <ScrollToTop />
       <div className="app-container">
-        <Navbar user={user} logout={logout} />
+        <Navbar user={user} />
         <main className="app-main">
           <Routes>
-            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/games" element={
-              <ProtectedRoute>
-                <Games />
-              </ProtectedRoute>
-            } />
-            <Route path="/games/memory" element={
-              <ProtectedRoute>
-                <ErrorBoundary><MemoryGame /></ErrorBoundary>
-              </ProtectedRoute>
-            } />
-            <Route path="/games/sequence" element={
-              <ProtectedRoute>
-                <ErrorBoundary><SequenceRecall /></ErrorBoundary>
-              </ProtectedRoute>
-            } />
-            <Route path="/games/attention" element={
-              <ProtectedRoute>
-                <ErrorBoundary><AttentionGame /></ErrorBoundary>
-              </ProtectedRoute>
-            } />
-            <Route path="/games/stroop" element={
-              <ProtectedRoute>
-                <ErrorBoundary><StroopEffect /></ErrorBoundary>
-              </ProtectedRoute>
-            } />
-            <Route path="/games/nback" element={
-              <ProtectedRoute>
-                <ErrorBoundary><NBack /></ErrorBoundary>
-              </ProtectedRoute>
-            } />
-            <Route path="/games/visualsearch" element={
-              <ProtectedRoute>
-                <ErrorBoundary><VisualSearch /></ErrorBoundary>
-              </ProtectedRoute>
-            } />
-            <Route path="/games/choicereaction" element={
-              <ProtectedRoute>
-                <ErrorBoundary><ChoiceReaction /></ErrorBoundary>
-              </ProtectedRoute>
-            } />
-            <Route path="/games/cardsorting" element={
-              <ProtectedRoute>
-                <ErrorBoundary><CardSorting /></ErrorBoundary>
-              </ProtectedRoute>
-            } />
-            <Route path="/games/trailmaking" element={
-              <ProtectedRoute>
-                <ErrorBoundary><TrailMaking /></ErrorBoundary>
-              </ProtectedRoute>
-            } />
-            <Route path="/games/mentalrotation" element={
-              <ProtectedRoute>
-                <ErrorBoundary><MentalRotation /></ErrorBoundary>
-              </ProtectedRoute>
-            } />
-            <Route path="/games/digitspan" element={
-              <ProtectedRoute>
-                <ErrorBoundary><DigitSpan /></ErrorBoundary>
-              </ProtectedRoute>
-            } />
-            <Route path="/games/flanker" element={
-              <ProtectedRoute>
-                <ErrorBoundary><FlankerTask /></ErrorBoundary>
-              </ProtectedRoute>
-            } />
-            <Route path="/games/patternmemory" element={
-              <ProtectedRoute>
-                <ErrorBoundary><PatternMemory /></ErrorBoundary>
-              </ProtectedRoute>
-            } />
+            <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+            <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
+            <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+            <Route path="/mentor-dashboard" element={<PrivateRoute><ErrorBoundary><MentorDashboard /></ErrorBoundary></PrivateRoute>} />
+            <Route path="/games" element={<PrivateRoute><Games /></PrivateRoute>} />
+            <Route path="/games/memory" element={<PrivateRoute><ErrorBoundary><MemoryGame /></ErrorBoundary></PrivateRoute>} />
+            <Route path="/games/sequence" element={<PrivateRoute><ErrorBoundary><SequenceRecall /></ErrorBoundary></PrivateRoute>} />
+            <Route path="/games/attention" element={<PrivateRoute><ErrorBoundary><AttentionGame /></ErrorBoundary></PrivateRoute>} />
+            <Route path="/games/stroop" element={<PrivateRoute><ErrorBoundary><StroopEffect /></ErrorBoundary></PrivateRoute>} />
+            <Route path="/games/nback" element={<PrivateRoute><ErrorBoundary><NBack /></ErrorBoundary></PrivateRoute>} />
+            <Route path="/games/visualsearch" element={<PrivateRoute><ErrorBoundary><VisualSearch /></ErrorBoundary></PrivateRoute>} />
+            <Route path="/games/choicereaction" element={<PrivateRoute><ErrorBoundary><ChoiceReaction /></ErrorBoundary></PrivateRoute>} />
+            <Route path="/games/cardsorting" element={<PrivateRoute><ErrorBoundary><CardSorting /></ErrorBoundary></PrivateRoute>} />
+            <Route path="/games/trailmaking" element={<PrivateRoute><ErrorBoundary><TrailMaking /></ErrorBoundary></PrivateRoute>} />
+            <Route path="/games/mentalrotation" element={<PrivateRoute><ErrorBoundary><MentalRotation /></ErrorBoundary></PrivateRoute>} />
+            <Route path="/games/digitspan" element={<PrivateRoute><ErrorBoundary><DigitSpan /></ErrorBoundary></PrivateRoute>} />
+            <Route path="/games/flanker" element={<PrivateRoute><ErrorBoundary><FlankerTask /></ErrorBoundary></PrivateRoute>} />
+            <Route path="/games/patternmemory" element={<PrivateRoute><ErrorBoundary><PatternMemory /></ErrorBoundary></PrivateRoute>} />
             <Route path="*" element={<div style={{ padding: "80px", textAlign: "center" }}><h1>404</h1></div>} />
           </Routes>
         </main>
-        <Footer />
+        {/* Footer removed */}
       </div>
     </>
   );

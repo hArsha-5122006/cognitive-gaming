@@ -1,4 +1,4 @@
-import { saveGameResult } from "../../utils/api";
+import { saveActivity } from "../../utils/recommender";
 import { useState, useEffect } from "react";
 import { getDifficultySettings, generateTrial, calculateAccuracy, calculateStars, calculateScore } from "./mentalRotationLogic";
 import "./mentalRotation.css";
@@ -91,6 +91,23 @@ function MentalRotation() {
     setScore(finalScore);
     setStars(calculateStars(accuracy, avg));
     setGameOver(true);
+      const username = localStorage.getItem("username");
+      if (username) {
+        saveActivity(username, "Mental Rotation", score || 0, accuracy || 0, stars || 0, difficulty || 1, responseTime || 0);
+      }if (username) {
+      }
+      if (username) {
+      }
+      if (username) {
+      }
+      if (username) {
+      }
+      if (username) {
+      }
+      const userStr = localStorage.getItem("user");
+      if (userStr) {
+        const user = JSON.parse(userStr);
+      }
           // TODO: Insert saveGameResult here with actual variables
     setGameStarted(false);
   };

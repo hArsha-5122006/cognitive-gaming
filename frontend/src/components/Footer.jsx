@@ -1,14 +1,13 @@
 function Footer() {
   return (
     <footer style={{
-      background: 'rgba(255,255,255,0.5)',
-      backdropFilter: 'blur(8px)',
-      WebkitBackdropFilter: 'blur(8px)',
-      borderTop: '1px solid rgba(255,255,255,0.3)',
-      padding: '20px 32px',
+      background: 'var(--primary)',
+      padding: '16px 32px',
       textAlign: 'center',
-      color: '#7a928a',
+      color: 'rgba(255,255,255,0.7)',
       fontSize: '0.85rem',
+      borderTop: '1px solid rgba(212,175,55,0.2)',
+      marginTop: 'auto',
     }}>
       <p style={{ margin: 0 }}>© 2024 MindPlay. All rights reserved.</p>
     </footer>

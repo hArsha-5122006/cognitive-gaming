@@ -1,85 +1,92 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { getPerformanceSummary, getActivities } from '../utils/recommender';
 
 function Dashboard() {
-  const { user, token } = useAuth();
-  const [history, setHistory] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const [summary, setSummary] = useState(null);
+  const [activities, setActivities] = useState([]);
+
+  const loadData = () => {
+    if (user) {
+      setActivities(getActivities(user.username));
+      setSummary(getPerformanceSummary(user.username));
+    }
+  };
 
   useEffect(() => {
-    if (!user) return;
-    fetch('/api/game/history', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(res => res.json())
-      .then(data => {
-        setHistory(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, [user, token]);
+    loadData();
+    const handleSave = () => loadData();
+    window.addEventListener('gameResultSaved', handleSave);
+    return () => window.removeEventListener('gameResultSaved', handleSave);
+  }, [user]);
 
-  const totalGames = history.length;
-  const avgScore = totalGames ? Math.round(history.reduce((s, g) => s + g.score, 0) / totalGames) : 0;
-  const bestScore = totalGames ? Math.max(...history.map(g => g.score)) : 0;
-  const avgAccuracy = totalGames ? Math.round(history.reduce((s, g) => s + g.accuracy, 0) / totalGames) : 0;
+  if (!user) return <div className="container" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>Please log in.</div>;
 
-  if (loading) return <div className="container" style={{ padding: '40px', textAlign: 'center' }}>Loading...</div>;
+  const totalGames = summary?.totalGames || 0;
+  const skillAverages = summary?.skillAverages || {};
 
   return (
     <div className="container" style={{ padding: '20px 0 40px' }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: '8px' }}>Dashboard</h1>
-      <p style={{ color: '#4a5f5a', marginBottom: '24px' }}>Your performance overview</p>
+      <h1 style={{ fontSize: '2rem', marginBottom: '4px', color: 'var(--text-primary)' }}>
+        Good Morning, {user.username}!
+      </h1>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Keep playing, keep your mind active.</p>
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
         gap: '20px',
         marginBottom: '32px',
       }}>
         <div className="card" style={{ textAlign: 'center' }}>
           <div className="stat-number">{totalGames}</div>
-          <div className="stat-label">Games Played</div>
+          <div className="stat-label">Total Games</div>
         </div>
         <div className="card" style={{ textAlign: 'center' }}>
-          <div className="stat-number">{avgScore}</div>
-          <div className="stat-label">Avg Score</div>
+          <div className="stat-number">{summary?.weakest || '—'}</div>
+          <div className="stat-label">Weakest Skill</div>
         </div>
         <div className="card" style={{ textAlign: 'center' }}>
-          <div className="stat-number">{bestScore}</div>
-          <div className="stat-label">Best Score</div>
-        </div>
-        <div className="card" style={{ textAlign: 'center' }}>
-          <div className="stat-number">{avgAccuracy}%</div>
-          <div className="stat-label">Avg Accuracy</div>
+          <div className="stat-number">{summary?.strongest || '—'}</div>
+          <div className="stat-label">Strongest Skill</div>
         </div>
       </div>
 
-      <h2 style={{ fontSize: '1.4rem', marginBottom: '16px' }}>Recent Games</h2>
-      {history.length === 0 ? (
-        <p style={{ color: '#4a5f5a' }}>No games played yet.</p>
+      <h2 style={{ fontSize: '1.4rem', marginBottom: '16px' }}>Skill Performance</h2>
+      <div className="card" style={{ padding: '20px', marginBottom: '24px' }}>
+        {Object.keys(skillAverages).length === 0 ? (
+          <p style={{ color: 'var(--text-secondary)' }}>No data yet – play some games!</p>
+        ) : (
+          Object.entries(skillAverages).map(([skill, avg]) => (
+            <div key={skill} style={{ marginBottom: '12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ fontWeight: 500 }}>{skill}</span>
+                <span>{avg}</span>
+              </div>
+              <div className="skill-bar">
+                <div className="fill" style={{ width: `${Math.min(avg, 100)}%` }} />
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      <h2 style={{ fontSize: '1.4rem', marginBottom: '16px' }}>Recent Activities</h2>
+      {activities.length === 0 ? (
+        <p style={{ color: 'var(--text-secondary)' }}>No activities yet.</p>
       ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', background: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-            <thead style={{ background: '#eaf5f1' }}>
-              <tr>
-                <th style={{ padding: '12px 16px', textAlign: 'left' }}>Game</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center' }}>Score</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center' }}>Accuracy</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center' }}>Stars</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center' }}>Difficulty</th>
-                <th style={{ padding: '12px 16px', textAlign: 'right' }}>Date</th>
-              </tr>
-            </thead>
+        <div className="table-wrap">
+          <table>
+            <thead><tr><th>Game</th><th>Score</th><th>Accuracy</th><th>Stars</th><th>Date</th></tr></thead>
             <tbody>
-              {history.slice(0, 20).map((g, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid #eef2f0' }}>
-                  <td style={{ padding: '12px 16px' }}>{g.game_name}</td>
-                  <td style={{ padding: '12px 16px', textAlign: 'center' }}>{g.score}</td>
-                  <td style={{ padding: '12px 16px', textAlign: 'center' }}>{g.accuracy}%</td>
-                  <td style={{ padding: '12px 16px', textAlign: 'center' }}>{'⭐'.repeat(g.stars)}</td>
-                  <td style={{ padding: '12px 16px', textAlign: 'center' }}>{g.difficulty}</td>
-                  <td style={{ padding: '12px 16px', textAlign: 'right', color: '#4a5f5a' }}>{new Date(g.created_at).toLocaleDateString()}</td>
+              {activities.slice(0, 10).map((act, idx) => (
+                <tr key={idx}>
+                  <td>{act.game}</td>
+                  <td>{act.score}</td>
+                  <td>{act.accuracy}%</td>
+                  <td>{'⭐'.repeat(act.stars)}</td>
+                  <td>{new Date(act.date).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>

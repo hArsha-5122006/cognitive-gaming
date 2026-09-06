@@ -1,82 +1,55 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import React, { createContext, useState, useContext } from 'react';
 
 const AuthContext = createContext();
-const API_BASE = 'http://localhost:5002/api';
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('access_token') || null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(() => {
+    const stored = localStorage.getItem('user');
+    return stored ? JSON.parse(stored) : null;
+  });
 
-  useEffect(() => {
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setUser({ id: decoded.sub });
-        fetchUserProfile(token);
-      } catch {
-        logout();
-      }
-    } else {
-      setLoading(false);
+  const signup = (username, email, password, role, mentorEmail) => {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    if (users[email]) {
+      throw new Error('User with this email already exists.');
     }
-  }, [token]);
-
-  const fetchUserProfile = async (tkn) => {
-    try {
-      const res = await fetch(`${API_BASE}/auth/profile`, {
-        headers: { Authorization: `Bearer ${tkn}` }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data);
-      } else {
-        logout();
-      }
-    } catch {
-      logout();
-    } finally {
-      setLoading(false);
-    }
+    users[email] = { username, email, password, role, mentorEmail };
+    localStorage.setItem('users', JSON.stringify(users));
+    const emailMap = JSON.parse(localStorage.getItem('emailMap') || '{}');
+    emailMap[email] = username;
+    localStorage.setItem('emailMap', JSON.stringify(emailMap));
+    const userData = { username, email, role };
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('username', username);
+    localStorage.setItem('email', email);
+    return true;
   };
 
-  const login = async (email, password) => {
-    const res = await fetch(`${API_BASE}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Login failed');
-    localStorage.setItem('access_token', data.access_token);
-    setToken(data.access_token);
-    setUser(data.user);
-    return data;
-  };
-
-  const register = async (username, email, password) => {
-    const res = await fetch(`${API_BASE}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Registration failed');
-    localStorage.setItem('access_token', data.access_token);
-    setToken(data.access_token);
-    setUser(data.user);
-    return data;
+  const login = (email, password) => {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const userData = users[email];
+    if (!userData || userData.password !== password) {
+      throw new Error('Invalid email or password.');
+    }
+    const { username, role } = userData;
+    const loggedUser = { username, email, role };
+    setUser(loggedUser);
+    localStorage.setItem('user', JSON.stringify(loggedUser));
+    localStorage.setItem('username', username);
+    localStorage.setItem('email', email);
+    return loggedUser;
   };
 
   const logout = () => {
-    localStorage.removeItem('access_token');
-    setToken(null);
     setUser(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('username');
+    localStorage.removeItem('email');
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, signup, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

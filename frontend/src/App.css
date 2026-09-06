@@ -2,74 +2,25 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--bg);
+  background: var(--bg-dark);
 }
-
 .app-main {
   flex: 1;
-  padding: 16px 0 32px;
+  padding: 24px 0 48px;
 }
-
-/* Compact game container – smaller, scrollable if needed */
 .game-container {
-  background: rgba(255,255,255,0.7) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(255,255,255,0.3) !important;
-  border-radius: 20px !important;
-  padding: 16px 14px !important;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.04) !important;
-  max-width: 520px !important;
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius);
+  padding: 24px 20px;
+  box-shadow: var(--glass-shadow);
+  max-width: 780px;
   margin: 0 auto;
-  max-height: 75vh !important;
-  overflow-y: auto !important;
-  transition: all 0.25s ease;
-  transform: translateY(0);
+  transition: var(--transition);
 }
-
 .game-container:hover {
-  transform: translateY(-2px) scale(1.002);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.06);
-  border-color: #3a9d7c !important;
-}
-
-/* Custom scrollbar */
-.game-container::-webkit-scrollbar {
-  width: 4px;
-}
-.game-container::-webkit-scrollbar-track {
-  background: rgba(0,0,0,0.02);
-}
-.game-container::-webkit-scrollbar-thumb {
-  background: var(--primary-light);
-  border-radius: 4px;
-}
-
-/* Compact headings */
-.game-container h1 {
-  font-size: 1.6rem !important;
-  margin-bottom: 6px !important;
-}
-.game-container h2 {
-  font-size: 1.2rem !important;
-  margin-bottom: 4px !important;
-}
-.game-container h3 {
-  font-size: 1rem !important;
-  margin-bottom: 4px !important;
-}
-.game-container p {
-  font-size: 0.85rem !important;
-  margin-bottom: 6px !important;
-}
-.game-container button {
-  font-size: 0.9rem !important;
-  padding: 8px 20px !important;
-}
-.game-container label {
-  font-size: 0.85rem !important;
-}
-.game-container select {
-  font-size: 0.85rem !important;
-  padding: 6px 10px !important;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+  border-color: rgba(0,229,255,0.1);
 }
